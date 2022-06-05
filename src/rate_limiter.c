@@ -102,8 +102,8 @@ static u_int32_t request_process(struct nfq_data *tb) {
     char *src_ip_info;
     src_ip_info = malloc(sizeof(char) * 20);
     if (src_ip_info == NULL) {
-        syslog(LOG_NOTICE, "error while allocating memory, exit.");
-        exit(-1);
+        syslog(LOG_NOTICE, "error while memory allocation, exit.");
+        exit(false);
     }
 
     memset(src_ip_info, '\0', strlen(src_ip_info));
@@ -112,8 +112,8 @@ static u_int32_t request_process(struct nfq_data *tb) {
     char *dst_ip_info;
     dst_ip_info = malloc(sizeof(char) * 20);
     if (dst_ip_info == NULL) {
-        syslog(LOG_NOTICE, "error while allocating memory, exit.");
-        exit(-1);
+        syslog(LOG_NOTICE, "error while memory allocation, exit.");
+        exit(false);
     }
     memset(dst_ip_info, '\0', strlen(dst_ip_info));
     char *dst = dump_ip(htonl(ip_header->ip_dst.s_addr), dst_ip_info);
@@ -122,7 +122,7 @@ static u_int32_t request_process(struct nfq_data *tb) {
     remove_spaces(src);
 
     // here where we go to manage incoming traffic
-    if (check_req_src_queue(src_ip_info) == 1) {
+    if (is_flooding_request(src_ip_info) == true) {
         flag = DROP_REQUEST;
     } else {
         flag = ALLOW_REQUEST;
