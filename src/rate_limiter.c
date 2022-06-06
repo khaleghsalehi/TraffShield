@@ -160,6 +160,11 @@ int main(int argc, char *argv[]) {
 
     // check req form local machine (lo)
     system("sudo echo 1 > /proc/sys/net/ipv4/ip_forward");
+
+    //enable tcp syn-cookie
+    system("echo 1 > /proc/sys/net/ipv4/tcp_syncookies");
+
+
     system("sudo iptables -A INPUT -j NFQUEUE --queue-num 0");
     system("sudo iptables -A OUTPUT -j NFQUEUE --queue-num 0");
 
